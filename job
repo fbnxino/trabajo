@@ -1,0 +1,16 @@
+# Usa la imagen de Alpine Linux como base
+FROM alpine:latest
+
+# Instala Apache y otros paquetes necesarios
+RUN apk update && \
+    apk add --no-cache apache2 && \
+    mkdir -p /run/apache2
+
+# Copia la configuración del servidor Apache
+COPY httpd.conf /etc/apache2/httpd.conf
+
+# Expone el puerto 80 para que se pueda acceder al servidor Apache
+EXPOSE 80
+
+# Inicia Apache en primer plano al ejecutar el contenedor
+CMD ["httpd", "-D", "FOREGROUND"]
