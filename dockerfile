@@ -1,11 +1,16 @@
-# Utilizamos la imagen base Alpine de Docker
+# Utiliza Alpine como base
 FROM alpine:latest
-# Actualizamos el repositorio e instalamos Apache
+
+# Actualiza el sistema y luego instala Apache
 RUN apk update && \
-    apk add apache2
-# Copiamos el archivo index.html desde el directorio actual al directorio de documentos de Apache en el contenedor
-RUN chown apache /var/www/localhost/htdocs/ && chmod a+r /var/www/localhost/htdocs/
-# Exponemos el puerto 80 para que Apache pueda recibir solicitudes HTTP
+    apk add --no-cache apache2 && \
+    rm -rf /var/cache/apk/*
+
+# Copia un archivo HTML de ejemplo al directorio de documentos de Apache
+COPY index.html /var/www/html
+
+# Expone el puerto 80 para acceder a Apache
 EXPOSE 80
-# Iniciamos Apache en primer plano cuando se inicie el contenedor
+
+# Comando para iniciar Apache en primer plano
 CMD ["httpd", "-D", "FOREGROUND"]
